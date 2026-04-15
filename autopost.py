@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 WealthSphere Autoposter
-Posts to WealthSphere Facebook page — 24 posts per day, one every hour.
+Posts to WealthSphere Facebook page — 1 post per day.
 Triggered by GitHub Actions cron schedule.
 """
 import os
@@ -13,6 +13,11 @@ from datetime import datetime
 PAGE_ACCESS_TOKEN = os.environ.get("FACEBOOK_PAGE_ACCESS_TOKEN")
 PAGE_ID           = "410293395491876"  # WealthSphere Facebook Page
 POSTS_FILE        = os.path.join(os.path.dirname(__file__), "posts.json")
+
+# ── Post schedule (UTC hour → post index) ─────────────────────────────────────
+SCHEDULE = {
+    9: 0,   # 9 AM UTC → post index 0
+}
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 def load_posts(filepath: str) -> list:
@@ -35,14 +40,19 @@ def main():
 
     print(f"[{datetime.utcnow().isoformat()}] WealthSphere Autoposter — UTC hour: {hour}")
 
-    # Use hour as direct index (0–23) — no lookup table, no gaps
-    if hour >= len(posts):
-        print(f"No post at index {hour}. Only {len(posts)} posts in file. Skipping.")
+    if hour not in SCHEDULE:
+        print(f"No post scheduled at UTC hour {hour}. Skipping.")
         return
 
-    post = posts[hour]
+    index = SCHEDULE[hour]
 
-    print(f"Publishing post index {hour}...")
+    if index >= len(posts):
+        print(f"Post index {index} not found. Only {len(posts)} posts in file. Skipping.")
+        return
+
+    post = posts[index]
+
+    print(f"Publishing post index {index} (scheduled hour: {hour})...")
     print(f"Preview: {str(post['content'])[:100]}...")
 
     result = publish_to_facebook(PAGE_ID, PAGE_ACCESS_TOKEN, post["content"])
