@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 WealthSphere Autoposter
-Posts to WealthSphere Facebook page — 1 post per day.
+Posts to WealthSphere Facebook page — 4 posts per day, every 6 hours.
 Triggered by GitHub Actions cron schedule.
 """
 import os
@@ -14,9 +14,12 @@ PAGE_ACCESS_TOKEN = os.environ.get("FACEBOOK_PAGE_ACCESS_TOKEN")
 PAGE_ID           = "410293395491876"  # WealthSphere Facebook Page
 POSTS_FILE        = os.path.join(os.path.dirname(__file__), "posts.json")
 
-# ── Post schedule (UTC hour → post index) ─────────────────────────────────────
+# ── Post schedule (UTC hours → post index) ────────────────────────────────────
 SCHEDULE = {
-    9: 0,   # 9 AM UTC → post index 0
+    6:  0,   # 6 AM UTC  → post index 0
+    12: 1,   # 12 PM UTC → post index 1
+    18: 2,   # 6 PM UTC  → post index 2
+    0:  3,   # 12 AM UTC → post index 3
 }
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
