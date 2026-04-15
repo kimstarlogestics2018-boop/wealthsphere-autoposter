@@ -67,4 +67,4 @@ def main():
         raise RuntimeError(f"Facebook API error: {result}")
 
 if __name__ == "__main__":
-    main()
+    main() 
