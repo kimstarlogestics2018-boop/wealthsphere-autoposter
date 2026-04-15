@@ -1,8 +1,8 @@
-name: WealthSphere — Daily Autoposter (24 Posts)
+name: WealthSphere — Daily Autoposter (1 Post)
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "0 9 * * *"   # 9 AM UTC daily
   workflow_dispatch:
 
 env:
